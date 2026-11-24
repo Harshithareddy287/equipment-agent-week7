@@ -106,6 +106,16 @@ Checked in this order; the first rule that matches decides the status.
 - `get_employee_info` and `get_policy_limits` return errors in the same shape:
   `{"error": "<message>", "error_code": "<code>"}`.
 
+**Result details:**
+- `status` and `reason` are always the first two keys of a `check_request_eligibility` result.
+- `days_until_eligible` is `0` when the request is already eligible (never negative).
+- `request_type` is matched case-insensitively (`"Replacement"` works). An empty or whitespace
+  value (`""`) is treated as not given and inferred per section 5.
+- `unknown_item` results report `request_type: "additional"` (or the type given), since an item
+  outside the catalog cannot already be owned.
+- `error` results include `status: "error"`, `reason` (the error message) and `error_code`, so every
+  result has the same core keys.
+
 ## 8. Decision rules (agent)
 
 ### 8.1 Decisions

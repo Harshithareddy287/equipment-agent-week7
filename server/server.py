@@ -44,5 +44,32 @@ def get_policy_limits(role: str) -> dict:
     return tools.get_policy_limits(role)
 
 
+@mcp.tool()
+def check_request_eligibility(employee_id: str, item: str, request_type: str | None = None) -> dict:
+    """Check whether an employee's equipment request falls within policy. Call this before deciding.
+
+    Args:
+        employee_id: e.g. "E001".
+        item: the item requested, in plain words (e.g. "monitor", "screens", "headphones").
+            It is mapped to a catalog item: laptop, monitor, keyboard, mouse, headset,
+            docking_station. Anything else is reported as unknown_item.
+        request_type: "additional" when the employee wants one more ("second", "another",
+            "extra"); "replacement" when they want to replace one they have ("replace",
+            "old", "slow", "broken"). Omit it if the wording is unclear: it is then
+            inferred (replacement if they already own the item, otherwise additional).
+
+    Returns {status, reason, item, request_type, ...} where status is one of:
+        eligible     - within policy.
+        ineligible   - a policy rule says no (role not allowed the item, maximum count
+                       reached, or the refresh date is more than 60 days away).
+        borderline   - a replacement becomes eligible within 60 days.
+        unknown_item - the item is not in the catalog; "catalog" lists what can be requested.
+        error        - bad input or data; "error_code" is INVALID_EMPLOYEE_ID,
+                       EMPLOYEE_NOT_FOUND, ROLE_NOT_IN_POLICY or INVALID_REQUEST_TYPE.
+    Replacement results also include next_eligible_date and days_until_eligible.
+    """
+    return tools.check_request_eligibility(employee_id, item, request_type)
+
+
 if __name__ == "__main__":
     mcp.run(transport="stdio")
