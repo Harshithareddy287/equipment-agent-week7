@@ -50,7 +50,11 @@ async def call(params, name, arguments):
 async def test_lists_exactly_the_registered_tools(server_params):
     async with Client(server_params) as client:
         listing = await client.list_tools()
-    assert sorted(tool.name for tool in listing.tools) == ["get_employee_info", "get_policy_limits"]
+    assert sorted(tool.name for tool in listing.tools) == [
+        "check_request_eligibility",
+        "get_employee_info",
+        "get_policy_limits",
+    ]
 
 
 async def test_get_employee_info_uses_demo_today(server_params):
@@ -67,3 +71,13 @@ async def test_get_policy_limits_manager(server_params):
 async def test_get_policy_limits_unknown_role(server_params):
     result = await call(server_params, "get_policy_limits", {"role": "intern"})
     assert result["error_code"] == "ROLE_NOT_IN_POLICY"
+
+
+async def test_check_request_eligibility_borderline(server_params):
+    result = await call(
+        server_params,
+        "check_request_eligibility",
+        {"employee_id": "E003", "item": "laptop", "request_type": "replacement"},
+    )
+    assert result["status"] == "borderline"
+    assert result["days_until_eligible"] == 30

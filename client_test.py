@@ -48,6 +48,16 @@ async def main() -> None:
             print(f"\nget_policy_limits({role!r}) ->")
             print(json.dumps(result_as_json(result), indent=2))
 
+        eligibility_checks = [
+            {"employee_id": "E001", "item": "monitor", "request_type": "replacement"},
+            {"employee_id": "E003", "item": "laptop", "request_type": "replacement"},
+            {"employee_id": "E004", "item": "standing desk"},
+        ]
+        for args in eligibility_checks:
+            result = await client.call_tool("check_request_eligibility", args)
+            print(f"\ncheck_request_eligibility({args}) ->")
+            print(json.dumps(result_as_json(result), indent=2))
+
 
 if __name__ == "__main__":
     asyncio.run(main())
