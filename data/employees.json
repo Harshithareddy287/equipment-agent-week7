@@ -1,0 +1,89 @@
+{
+  "E001": {
+    "name": "Priya Shah",
+    "role": "standard",
+    "department": "Finance",
+    "hire_date": "2021-03-15",
+    "equipment": [
+      {"item": "laptop",  "acquired_date": "2023-01-10", "asset_tag": "LT-1001"},
+      {"item": "monitor", "acquired_date": "2022-09-01", "asset_tag": "MN-1001"}
+    ]
+  },
+  "E002": {
+    "name": "Marcus Lee",
+    "role": "contractor",
+    "department": "Marketing",
+    "hire_date": "2025-06-01",
+    "equipment": []
+  },
+  "E003": {
+    "name": "Dana Kim",
+    "role": "manager",
+    "department": "Operations",
+    "hire_date": "2018-02-01",
+    "equipment": [
+      {"item": "laptop",  "acquired_date": "2024-12-01", "asset_tag": "LT-1003"},
+      {"item": "monitor", "acquired_date": "2024-12-01", "asset_tag": "MN-1003"}
+    ]
+  },
+  "E004": {
+    "name": "Omar Haddad",
+    "role": "standard",
+    "department": "Customer Support",
+    "hire_date": "2020-07-20",
+    "equipment": [
+      {"item": "laptop",  "acquired_date": "2024-02-01", "asset_tag": "LT-1004"},
+      {"item": "monitor", "acquired_date": "2024-02-01", "asset_tag": "MN-1004"}
+    ]
+  },
+  "E005": {
+    "name": "Sofia Rossi",
+    "role": "engineer",
+    "department": "Engineering",
+    "hire_date": "2019-05-10",
+    "equipment": [
+      {"item": "laptop",  "acquired_date": "2023-06-15", "asset_tag": "LT-1005"},
+      {"item": "monitor", "acquired_date": "2025-03-01", "asset_tag": "MN-1005"}
+    ]
+  },
+  "E006": {
+    "name": "Liam Chen",
+    "role": "standard",
+    "department": "Sales",
+    "hire_date": "2022-01-10",
+    "equipment": [
+      {"item": "laptop",  "acquired_date": "2024-03-01", "asset_tag": "LT-1006"},
+      {"item": "monitor", "acquired_date": "2025-11-15", "asset_tag": "MN-1006"}
+    ]
+  },
+  "E007": {
+    "name": "Grace Okafor",
+    "role": "engineer",
+    "department": "Engineering",
+    "hire_date": "2020-09-01",
+    "equipment": [
+      {"item": "laptop",  "acquired_date": "2024-09-01", "asset_tag": "LT-1007"},
+      {"item": "monitor", "acquired_date": "2025-01-10", "asset_tag": "MN-1007"},
+      {"item": "monitor", "acquired_date": "2025-01-10", "asset_tag": "MN-1008"},
+      {"item": "monitor", "acquired_date": "2025-06-01", "asset_tag": "MN-1009"}
+    ]
+  },
+  "E008": {
+    "name": "Noah Patel",
+    "role": "manager",
+    "department": "Legal",
+    "hire_date": "2017-11-20",
+    "equipment": [
+      {"item": "laptop", "acquired_date": "2025-08-01", "asset_tag": "LT-1010"}
+    ]
+  },
+  "E009": {
+    "name": "Ava Martinez",
+    "role": "intern",
+    "department": "Engineering",
+    "hire_date": "2026-06-01",
+    "equipment": [
+      {"item": "laptop", "acquired_date": "2026-06-01", "asset_tag": "LT-1011"}
+    ]
+  }
+}
