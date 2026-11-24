@@ -147,6 +147,7 @@ Each trigger has a reason code that goes into `flag_for_human_review`.
 | `BROKEN_OR_STOLEN` | Request text contains: broken, broke, damaged, cracked, stolen, lost, missing | `detect_triggers` |
 | `AGENT_STEP_LIMIT` | The agent reached the step limit (8.4) without a decision | Agent code |
 | `REFLECTION_MISMATCH` | The draft decision is not allowed for the status (8.3) | Agent code |
+| `AGENT_ERROR` | The model refused or returned no usable response | Agent code |
 
 `detect_triggers(text)` is a deterministic function in the agent: case-insensitive whole-word matching
 against the keyword lists above. It returns a list of codes and is unit-tested in CI.
