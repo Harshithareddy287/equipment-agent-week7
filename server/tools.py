@@ -5,7 +5,7 @@ See docs/requirements.md section 10 for the contracts.
 """
 
 import json
-from datetime import date
+from datetime import date, datetime, timezone
 
 from server import config
 
@@ -223,3 +223,39 @@ def check_request_eligibility(
     result = _check_request_eligibility(employee_id, item, request_type, today)
     first = {key: result[key] for key in KEY_ORDER}
     return {**first, **{k: v for k, v in result.items() if k not in KEY_ORDER}}
+
+
+# --- flag_for_human_review (docs/requirements.md section 10) -------------------------
+
+def flag_for_human_review(employee_id: str | None, request: str | None, reason: str | None) -> dict:
+    """Escalate a request: append a ticket to the escalations file (side effect).
+
+    Unknown or empty employee IDs are accepted (UNKNOWN_EMPLOYEE / MISSING_EMPLOYEE_ID
+    escalations still need a ticket). An empty reason is rejected and nothing is written.
+    Returns {"status": "pending_review", "ticket_id": "ESC-0001"}.
+    """
+    if not (reason or "").strip():
+        return {"status": "error", "error": "reason must not be empty", "error_code": "EMPTY_REASON"}
+
+    path = config.escalations_path()
+    tickets = []
+    if path.exists():
+        with open(path, encoding="utf-8") as f:
+            tickets = json.load(f)
+
+    ticket_id = f"ESC-{len(tickets) + 1:04d}"
+    tickets.append({
+        "ticket_id": ticket_id,
+        "employee_id": (employee_id or "").strip(),
+        "request": request,
+        "reason": reason,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "status": "pending_review",
+    })
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(tickets, f, indent=2)
+        f.write("\n")
+
+    return {"status": "pending_review", "ticket_id": ticket_id}
