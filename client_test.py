@@ -43,6 +43,11 @@ async def main() -> None:
             print(f"\nget_employee_info({employee_id!r}) ->")
             print(json.dumps(result_as_json(result), indent=2))
 
+        for role in ["manager", "intern"]:
+            result = await client.call_tool("get_policy_limits", {"role": role})
+            print(f"\nget_policy_limits({role!r}) ->")
+            print(json.dumps(result_as_json(result), indent=2))
+
 
 if __name__ == "__main__":
     asyncio.run(main())
