@@ -20,6 +20,29 @@ def _load_employees() -> dict:
         return json.load(f)
 
 
+def _load_policies() -> dict:
+    with open(config.policies_path(), encoding="utf-8") as f:
+        return json.load(f)
+
+
+def get_policy_limits(role: str | None) -> dict:
+    """Return what a role may request: per-item allowed, max_count, refresh_months.
+
+    Role matching ignores case and surrounding spaces, so " Manager " finds manager.
+    Every catalog item is listed; an item missing from the role's policy is not allowed.
+    Errors: ROLE_NOT_IN_POLICY (unknown, empty or None role).
+    """
+    role_key = (role or "").strip().lower()
+    policies = _load_policies()
+    role_policy = policies["roles"].get(role_key) if role_key else None
+    if role_policy is None:
+        return _error(f"role {role_key or '<empty>'!s} is not in the policy", "ROLE_NOT_IN_POLICY")
+
+    not_allowed = {"allowed": False, "max_count": 0, "refresh_months": None}
+    items = {item: dict(role_policy.get(item, not_allowed)) for item in policies["catalog"]}
+    return {"role": role_key, "items": items}
+
+
 def get_employee_info(employee_id: str | None, today: date | None = None) -> dict:
     """Return an employee's role, tenure and equipment on file.
 

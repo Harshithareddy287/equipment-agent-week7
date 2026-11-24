@@ -28,5 +28,21 @@ def get_employee_info(employee_id: str) -> dict:
     return tools.get_employee_info(employee_id)
 
 
+@mcp.tool()
+def get_policy_limits(role: str) -> dict:
+    """Return what a role is eligible for and how often (case and surrounding spaces are ignored).
+
+    Roles in the policy: standard, manager, engineer, contractor. Returns
+    {"role": <role>, "items": {<item>: {allowed, max_count, refresh_months}}} for every
+    catalog item: laptop, monitor, keyboard, mouse, headset, docking_station.
+    allowed=false means the role cannot request that item; refresh_months is how
+    many months must pass before an item can be replaced (null when not allowed).
+
+    On failure returns {"error": <message>, "error_code": "ROLE_NOT_IN_POLICY"}
+    (unknown or empty role).
+    """
+    return tools.get_policy_limits(role)
+
+
 if __name__ == "__main__":
     mcp.run(transport="stdio")
