@@ -2,8 +2,8 @@
 
 Connects to the MCP server as a client and lets Claude work through a request in a
 ReAct loop (Thought -> Action -> Observation, repeated until a draft response).
-After the loop, agent/rules.py enforces the decision rules in code.
-Reflection comes in a later step.
+Then reflection reviews the draft against the tool observations (agent/reflection.py),
+and agent/rules.py enforces the decision rules in code.
 
 Run from the repo root:
   DEMO_TODAY=2026-11-01 python -m agent.agent "E001: My monitor is 4 years old. Can I get a replacement?"
@@ -15,7 +15,7 @@ import argparse
 import asyncio
 import json
 
-from agent import rules
+from agent import reflection, rules
 from agent.llm import make_claude
 from agent.mcp_client import connect, mcp_tools_to_claude, result_as_json
 from agent.prompts import SYSTEM_PROMPT
@@ -159,13 +159,31 @@ async def run_agent(request: str) -> dict:
 
         print(f"\n(steps used: {trace['num_steps']} of {MAX_STEPS})")
 
+        # --- Reflection (Part 5): review the draft before the safety check. ---
+        if trace["final_text"].strip():
+            result = await reflection.reflect(claude, model, request, trace)
+            text_after, notes = reflection.apply_reflection(trace["final_text"], result)
+            issues = result["issues"] + notes
+            print(f"\nReflection: {result['verdict']}")
+            print("Issues found:" + ("".join(f"\n- {i}" for i in issues) if issues else " none"))
+            if result["verdict"] == "REVISED":
+                print("Revised response:")
+                print(result["revised_response"])
+                if text_after != result["revised_response"]:
+                    print("(revision not applied; keeping the draft)")
+            trace["reflection"] = {"verdict": result["verdict"], "issues": issues,
+                                   "text_before": trace["final_text"], "text_after": text_after}
+            trace["final_text"] = text_after
+
         # --- Safety check (sections 8.2-8.4): the code decides what may stand. ---
         final = rules.finalize(trace, request)
         ticket_id = final["ticket_id"]
         if final["needs_ticket"]:
-            reason = rules.format_reason(
-                final["reason_codes"], final["override_note"] or "escalated by the agent"
-            )
+            explanation = final["override_note"] or "escalated by the agent"
+            if final["statuses"]:  # section 8.1: the ticket notes the status of every item
+                explanation += "; statuses: " + ", ".join(
+                    f"{item}={'/'.join(values)}" for item, values in final["statuses"].items())
+            reason = rules.format_reason(final["reason_codes"], explanation)
             args = {"employee_id": rules.extract_employee_id(request) or "",
                     "request": request, "reason": reason}
             print(f"Action (code): flag_for_human_review({json.dumps(args)})")
