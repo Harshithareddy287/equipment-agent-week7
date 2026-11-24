@@ -224,3 +224,4 @@ __marimo__/
 .venv/
 .env
 data/escalations.json
+demo_outputs/*.txt
