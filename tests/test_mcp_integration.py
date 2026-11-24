@@ -52,6 +52,7 @@ async def test_lists_exactly_the_registered_tools(server_params):
         listing = await client.list_tools()
     assert sorted(tool.name for tool in listing.tools) == [
         "check_request_eligibility",
+        "flag_for_human_review",
         "get_employee_info",
         "get_policy_limits",
     ]
@@ -81,3 +82,20 @@ async def test_check_request_eligibility_borderline(server_params):
     )
     assert result["status"] == "borderline"
     assert result["days_until_eligible"] == 30
+
+
+async def test_flag_for_human_review_writes_ticket(server_params, tmp_path):
+    reason = "BORDERLINE_ELIGIBILITY: eligible on 2026-12-01, 30 days away"
+    result = await call(
+        server_params,
+        "flag_for_human_review",
+        {"employee_id": "E003", "request": "My laptop is slow.", "reason": reason},
+    )
+    assert result == {"status": "pending_review", "ticket_id": "ESC-0001"}
+
+    # server_params points ESCALATIONS_PATH at tmp_path/escalations.json.
+    tickets = json.loads((tmp_path / "escalations.json").read_text(encoding="utf-8"))
+    assert len(tickets) == 1
+    assert tickets[0]["ticket_id"] == "ESC-0001"
+    assert tickets[0]["employee_id"] == "E003"
+    assert tickets[0]["reason"] == reason

@@ -71,5 +71,29 @@ def check_request_eligibility(employee_id: str, item: str, request_type: str | N
     return tools.check_request_eligibility(employee_id, item, request_type)
 
 
+@mcp.tool()
+def flag_for_human_review(employee_id: str, request: str, reason: str) -> dict:
+    """Escalate a request to a human reviewer. SIDE EFFECT: creates a review ticket.
+
+    Call this for EVERY ESCALATE decision (borderline eligibility, item not in the
+    catalog, unknown or missing employee, data errors, medical/accessibility or
+    broken/stolen reasons). Do not call it for APPROVE or DENY.
+
+    Args:
+        employee_id: the ID from the request, as given (unknown or empty IDs are accepted).
+        request: the employee's original request text.
+        reason: start with the reason code(s), joined with "; ", then ": " and a short
+            explanation. Codes: BORDERLINE_ELIGIBILITY, ITEM_NOT_IN_CATALOG,
+            UNKNOWN_EMPLOYEE, MISSING_EMPLOYEE_ID, DATA_ERROR, MEDICAL_OR_ACCESSIBILITY,
+            BROKEN_OR_STOLEN, AGENT_STEP_LIMIT, REFLECTION_MISMATCH. Example:
+            "ITEM_NOT_IN_CATALOG; MEDICAL_OR_ACCESSIBILITY: standing desk for a back injury".
+
+    Returns {"status": "pending_review", "ticket_id": "ESC-0001"}; give the ticket_id to
+    the employee. An empty reason returns {"status": "error", "error_code": "EMPTY_REASON"}
+    and creates no ticket.
+    """
+    return tools.flag_for_human_review(employee_id, request, reason)
+
+
 if __name__ == "__main__":
     mcp.run(transport="stdio")
