@@ -1,0 +1,50 @@
+{
+  "catalog": ["laptop", "monitor", "keyboard", "mouse", "headset", "docking_station"],
+  "synonyms": {
+    "screen": "monitor",
+    "display": "monitor",
+    "notebook": "laptop",
+    "computer": "laptop",
+    "macbook": "laptop",
+    "dock": "docking_station",
+    "docking station": "docking_station",
+    "headphone": "headset",
+    "headphones": "headset",
+    "mice": "mouse"
+  },
+  "borderline_window_days": 60,
+  "roles": {
+    "standard": {
+      "laptop":          {"allowed": true,  "max_count": 1, "refresh_months": 48},
+      "monitor":         {"allowed": true,  "max_count": 2, "refresh_months": 36},
+      "keyboard":        {"allowed": true,  "max_count": 1, "refresh_months": 24},
+      "mouse":           {"allowed": true,  "max_count": 1, "refresh_months": 24},
+      "headset":         {"allowed": true,  "max_count": 1, "refresh_months": 24},
+      "docking_station": {"allowed": false, "max_count": 0, "refresh_months": null}
+    },
+    "manager": {
+      "laptop":          {"allowed": true,  "max_count": 1, "refresh_months": 24},
+      "monitor":         {"allowed": true,  "max_count": 2, "refresh_months": 36},
+      "keyboard":        {"allowed": true,  "max_count": 1, "refresh_months": 24},
+      "mouse":           {"allowed": true,  "max_count": 1, "refresh_months": 24},
+      "headset":         {"allowed": true,  "max_count": 1, "refresh_months": 24},
+      "docking_station": {"allowed": true,  "max_count": 1, "refresh_months": 36}
+    },
+    "engineer": {
+      "laptop":          {"allowed": true,  "max_count": 1, "refresh_months": 36},
+      "monitor":         {"allowed": true,  "max_count": 3, "refresh_months": 24},
+      "keyboard":        {"allowed": true,  "max_count": 1, "refresh_months": 12},
+      "mouse":           {"allowed": true,  "max_count": 1, "refresh_months": 12},
+      "headset":         {"allowed": true,  "max_count": 1, "refresh_months": 24},
+      "docking_station": {"allowed": true,  "max_count": 1, "refresh_months": 36}
+    },
+    "contractor": {
+      "laptop":          {"allowed": false, "max_count": 0, "refresh_months": null},
+      "monitor":         {"allowed": false, "max_count": 0, "refresh_months": null},
+      "keyboard":        {"allowed": false, "max_count": 0, "refresh_months": null},
+      "mouse":           {"allowed": false, "max_count": 0, "refresh_months": null},
+      "headset":         {"allowed": false, "max_count": 0, "refresh_months": null},
+      "docking_station": {"allowed": false, "max_count": 0, "refresh_months": null}
+    }
+  }
+}
