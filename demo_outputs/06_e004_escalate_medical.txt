@@ -1,0 +1,41 @@
+
+=== Request: E004: I need a standing desk because of a back injury. ===
+
+--- Step 1 ---
+Thought: I'll check whether a standing desk is within policy for employee E004.
+Action: check_request_eligibility({"employee_id": "E004", "item": "standing desk"})
+Observation: {"status": "unknown_item", "reason": "'standing desk' is not in the equipment catalog", "item": "standing desk", "request_type": "additional", "catalog": ["laptop", "monitor", "keyboard", "mouse", "headset", "docking_station"]}
+
+--- Step 2 ---
+Thought: The item isn't in the catalog, and the request mentions an injury, so I'll send it for human review.
+Action: flag_for_human_review({"employee_id": "E004", "request": "I need a standing desk because of a back injury.", "reason": "ITEM_NOT_IN_CATALOG; MEDICAL_OR_ACCESSIBILITY: standing desk requested for a back injury"})
+Observation: {"status": "pending_review", "ticket_id": "ESC-0002"}
+
+Draft response:
+I've sent your standing desk request to a human reviewer for two reasons:
+
+- Standing desks aren't in our equipment catalog. The catalog only has laptops, monitors, keyboards, mice, headsets and docking stations.
+- You mentioned a back injury. Requests involving a medical or accessibility need always go to a person for review.
+
+Your ticket number is **ESC-0002**. A reviewer will look at your request and contact you.
+
+DECISION: ESCALATE
+
+(steps used: 2 of 8)
+
+Reflection: CONFIRMED
+Issues found: none
+
+Safety check: statuses={'standing desk': ['unknown_item']}, triggers=['MEDICAL_OR_ACCESSIBILITY'], allowed=['ESCALATE'], draft decision=ESCALATE, final decision=ESCALATE
+Final decision: ESCALATE
+Escalation reason: ITEM_NOT_IN_CATALOG; MEDICAL_OR_ACCESSIBILITY
+Ticket: ESC-0002
+Final response:
+I've sent your standing desk request to a human reviewer for two reasons:
+
+- Standing desks aren't in our equipment catalog. The catalog only has laptops, monitors, keyboards, mice, headsets and docking stations.
+- You mentioned a back injury. Requests involving a medical or accessibility need always go to a person for review.
+
+Your ticket number is **ESC-0002**. A reviewer will look at your request and contact you.
+
+DECISION: ESCALATE

@@ -174,7 +174,7 @@ def _check_request_eligibility(
 
     # Rule 3: role must be allowed the item.
     if not limit["allowed"]:
-        return {**result, "status": "ineligible", "reason": f"role {role} is not allowed a {catalog_item}"}
+        return {**result, "status": "ineligible", "reason": f"role '{role}' is not allowed a {catalog_item}"}
 
     # Rules 4-5: additional requests are checked against max_count.
     if used_type == "additional":
@@ -183,12 +183,12 @@ def _check_request_eligibility(
             return {
                 **result,
                 "status": "ineligible",
-                "reason": f"already has {count} {catalog_item}(s); the {role} maximum is {max_count}",
+                "reason": f"already has {count} {catalog_item}(s); maximum for role '{role}' is {max_count}",
             }
         return {
             **result,
             "status": "eligible",
-            "reason": f"has {count} {catalog_item}(s); the {role} maximum is {max_count}",
+            "reason": f"has {count} {catalog_item}(s); maximum for role '{role}' is {max_count}",
         }
 
     # Rules 6-8: replacements are checked against refresh_months from the OLDEST unit.
@@ -199,7 +199,7 @@ def _check_request_eligibility(
     dates = {"next_eligible_date": next_date.isoformat(), "days_until_eligible": max(days, 0)}
     basis = (
         f"oldest {catalog_item} acquired {oldest.isoformat()}; "
-        f"{role} refresh period is {limit['refresh_months']} months"
+        f"refresh period for role '{role}' is {limit['refresh_months']} months"
     )
 
     if days <= 0:

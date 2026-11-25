@@ -1,0 +1,33 @@
+Registered tools: ['get_employee_info']
+
+get_employee_info('E001') ->
+{
+  "id": "E001",
+  "name": "Priya Shah",
+  "role": "standard",
+  "department": "Finance",
+  "hire_date": "2021-03-15",
+  "tenure": {
+    "tenure_months": 67,
+    "years": 5,
+    "months": 7
+  },
+  "equipment": [
+    {
+      "item": "laptop",
+      "acquired_date": "2023-01-10",
+      "asset_tag": "LT-1001"
+    },
+    {
+      "item": "monitor",
+      "acquired_date": "2022-09-01",
+      "asset_tag": "MN-1001"
+    }
+  ]
+}
+
+get_employee_info('E999') ->
+{
+  "error": "employee E999 not found",
+  "error_code": "EMPLOYEE_NOT_FOUND"
+}

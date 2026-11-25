@@ -126,6 +126,9 @@ Checked in this order; the first rule that matches decides the status.
 | **DENY** | Status is `ineligible` and no escalation trigger applies |
 | **ESCALATE** | Any escalation trigger in 8.2 applies |
 
+A request with several items gets one decision; if any item requires ESCALATE, the whole request is
+escalated (the strictest result wins), and the ticket notes the status of every item.
+
 **DENY vs. "outside policy":** the assignment asks both to escalate requests outside policy and to
 show a clearly denied request. DENY is used only when a rule clearly says no and none of the facts are
 in doubt (role not allowed the item, maximum count reached, or eligibility more than 60 days away).
@@ -200,6 +203,23 @@ The response to the employee must:
   request *will* be approved.
 - For ESCALATE: say it was sent for human review and give the ticket ID.
 - End with a machine-readable line: `DECISION: APPROVE`, `DECISION: DENY` or `DECISION: ESCALATE`.
+
+### 9.1 Reflection
+
+Before the safety check (8.3), a second model call reviews the draft. It receives the request, every
+tool observation and the draft, and checks that:
+- every fact (dates, statuses, ticket IDs, policy numbers) is supported by the observations;
+- there are no unsupported commitments (delivery dates or times, models or brands, promises of future
+  approval, advice or next steps not backed by the tools);
+- the `DECISION` line follows 8.1 for the statuses returned.
+
+It returns JSON: `{"verdict": "CONFIRMED" | "REVISED", "issues": [...], "revised_response": "..."}`.
+- **CONFIRMED:** the draft is used unchanged.
+- **REVISED:** the revised response replaces the draft, unless it has no valid `DECISION` line or it
+  would loosen an ESCALATE draft to APPROVE or DENY; then the draft is kept and an issue is recorded.
+- Reflection may tighten APPROVE or DENY to ESCALATE; the safety check then files the ticket.
+- If reflection fails (invalid JSON, refusal, API error), the draft is kept. The safety check (8.3)
+  still applies every rule to whichever text is used.
 
 ## 10. Tools
 

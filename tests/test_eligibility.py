@@ -19,6 +19,10 @@ def check(employee_id, item, request_type=None, today=TODAY):
 def test_e001_monitor_replacement_eligible():
     r = check("E001", "monitor", "replacement")
     assert r["status"] == "eligible"
+    assert r["reason"] == (
+        "oldest monitor acquired 2022-09-01; refresh period for role 'standard' is 36 months; "
+        "eligible since 2025-09-01"
+    )
     assert r["next_eligible_date"] == "2025-09-01"
     assert r["days_until_eligible"] == 0
 
@@ -26,7 +30,7 @@ def test_e001_monitor_replacement_eligible():
 def test_e002_contractor_laptop_ineligible():
     r = check("E002", "laptop")
     assert r["status"] == "ineligible"
-    assert "not allowed" in r["reason"]
+    assert r["reason"] == "role 'contractor' is not allowed a laptop"
 
 
 def test_e003_laptop_replacement_borderline():
@@ -58,7 +62,7 @@ def test_e006_monitor_replacement_inside_refresh_window():
 def test_e007_additional_monitor_max_count_reached():
     r = check("E007", "monitor", "additional")
     assert r["status"] == "ineligible"
-    assert "maximum is 3" in r["reason"]
+    assert r["reason"] == "already has 3 monitor(s); maximum for role 'engineer' is 3"
 
 
 def test_e007_monitor_replacement_still_ineligible():
@@ -104,6 +108,7 @@ def test_request_type_inferred_as_replacement_when_owned():
 def test_second_monitor_additional_within_max_count():
     r = check("E001", "monitor", "additional")  # has 1 of 2
     assert r["status"] == "eligible"
+    assert r["reason"] == "has 1 monitor(s); maximum for role 'standard' is 2"
     assert r["request_type"] == "additional"
 
 
