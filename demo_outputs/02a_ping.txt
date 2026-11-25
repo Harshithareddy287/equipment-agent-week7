@@ -1,0 +1,2 @@
+Registered tools: ['ping']
+ping -> pong

@@ -1,0 +1,35 @@
+
+=== Request: E003: My laptop is slow. Can I get a new one? ===
+
+--- Step 1 ---
+Thought: I'll check whether E003 is eligible for a laptop replacement. The request says the laptop is "slow" and asks for a "new one", so this is a replacement.
+Action: check_request_eligibility({"employee_id": "E003", "item": "laptop", "request_type": "replacement"})
+Observation: {"status": "borderline", "reason": "oldest laptop acquired 2024-12-01; refresh period for role 'manager' is 24 months; eligible on 2026-12-01, 30 days away (within the 60-day borderline window)", "item": "laptop", "request_type": "replacement", "next_eligible_date": "2026-12-01", "days_until_eligible": 30}
+
+--- Step 2 ---
+Thought: The result is borderline, so I'll send this request for human review.
+Action: flag_for_human_review({"employee_id": "E003", "request": "My laptop is slow. Can I get a new one?", "reason": "BORDERLINE_ELIGIBILITY: laptop replacement for manager; current laptop acquired 2024-12-01, 24-month refresh period, eligible on 2026-12-01 (30 days away)"})
+Observation: {"status": "pending_review", "ticket_id": "ESC-0001"}
+
+Draft response:
+I've sent your request for a replacement laptop to a person for review. Your ticket ID is **ESC-0001**.
+
+You're not eligible yet, but you're close. Your current laptop was issued on 2024-12-01. Managers can get a new laptop every 24 months, so you'll be eligible from 2026-12-01, which is 30 days away. Requests that become eligible within 60 days go to a person to decide. The reviewer will follow up with you.
+
+DECISION: ESCALATE
+
+(steps used: 2 of 8)
+
+Reflection: CONFIRMED
+Issues found: none
+
+Safety check: statuses={'laptop': ['borderline']}, triggers=[], allowed=['ESCALATE'], draft decision=ESCALATE, final decision=ESCALATE
+Final decision: ESCALATE
+Escalation reason: BORDERLINE_ELIGIBILITY
+Ticket: ESC-0001
+Final response:
+I've sent your request for a replacement laptop to a person for review. Your ticket ID is **ESC-0001**.
+
+You're not eligible yet, but you're close. Your current laptop was issued on 2024-12-01. Managers can get a new laptop every 24 months, so you'll be eligible from 2026-12-01, which is 30 days away. Requests that become eligible within 60 days go to a person to decide. The reviewer will follow up with you.
+
+DECISION: ESCALATE
